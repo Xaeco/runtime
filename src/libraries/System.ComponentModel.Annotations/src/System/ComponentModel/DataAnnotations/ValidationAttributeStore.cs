@@ -220,11 +220,13 @@ namespace System.ComponentModel.DataAnnotations
 
             private Dictionary<string, PropertyStoreItem> CreatePropertyStoreItems()
             {
+
                 var propertyStoreItems = new Dictionary<string, PropertyStoreItem>();
 
                 // exclude index properties to match old TypeDescriptor functionality
                 var properties = _type.GetRuntimeProperties()
                     .Where(prop => IsPublic(prop) && !prop.GetIndexParameters().Any());
+
                 foreach (PropertyInfo property in properties)
                 {
                     // use CustomAttributeExtensions.GetCustomAttributes() to get inherited attributes as well as direct ones
@@ -233,7 +235,61 @@ namespace System.ComponentModel.DataAnnotations
                     propertyStoreItems[property.Name] = item;
                 }
 
+                return CombineMetadataTypeAttributes(propertyStoreItems);
+            }
+
+            [UnconditionalSuppressMessage("ReflectionAnalysis", "IL2075:DynamicallyAccessedMembersAttribute",
+                       Justification = "The ctor is marked with DynamicallyAccessedMembers.")]
+            private Dictionary<string, PropertyStoreItem> CombineMetadataTypeAttributes(Dictionary<string, PropertyStoreItem> propertyStoreItems)
+            {
+                // check if metadata attribute is present on the type
+                var metadataAttr = _type.CustomAttributes.FirstOrDefault(attr => attr.AttributeType.Name == nameof(MetadataTypeAttribute));
+                if (metadataAttr != null)
+                {
+                    // get properties of metadata type
+                    TypeInfo t = (TypeInfo)metadataAttr.ConstructorArguments.First().Value!;
+                    var properties = t.GetProperties()
+                        .Where(prop => !prop.GetIndexParameters().Any());
+
+                    foreach (PropertyInfo property in properties)
+                    {
+                        // metadata property name must match an existing property
+                        if (!propertyStoreItems.TryGetValue(property.Name, out PropertyStoreItem? baseProperty))
+                        {
+                            // re-used existing description since it is the same exception
+                            throw new InvalidOperationException(SR.Format(SR.AssociatedMetadataTypeTypeDescriptor_MetadataTypeContainsUnknownProperties,
+                                _type.FullName,
+                                property.Name));
+                        }
+
+                        var mergedAttributes = MergeAttributes(baseProperty!.ValidationAttributes.Cast<Attribute>(),
+                            CustomAttributeExtensions.GetCustomAttributes(property, true));
+                        var item = new PropertyStoreItem(property.PropertyType, mergedAttributes);
+                        propertyStoreItems[property.Name] = item;
+                    }
+                }
+
                 return propertyStoreItems;
+            }
+
+            private IEnumerable<Attribute> MergeAttributes(IEnumerable<Attribute> primary, IEnumerable<Attribute> secondary)
+            {
+                List<Attribute> newAttrs = primary.ToList();
+                foreach (var secAttr in secondary)
+                {
+                    var matchingAttr = primary.FirstOrDefault(attr => attr.GetType() == secAttr.GetType());
+                    if (matchingAttr != null)
+                    {
+                        var i = newAttrs.IndexOf(matchingAttr);
+                        newAttrs[i] = secAttr;
+                    }
+                    else
+                    {
+                        newAttrs.Add(secAttr);
+                    }
+                }
+
+                return newAttrs;
             }
         }
 
