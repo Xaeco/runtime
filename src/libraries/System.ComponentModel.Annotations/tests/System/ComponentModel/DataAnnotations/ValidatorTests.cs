@@ -242,8 +242,7 @@ namespace System.ComponentModel.DataAnnotations.Tests
             var validationContext = new ValidationContext(objectToBeValidated);
 
             var validationResults = new List<ValidationResult>();
-            Assert.False(
-                Validator.TryValidateObject(objectToBeValidated, validationContext, validationResults, true));
+            Assert.False(Validator.TryValidateObject(objectToBeValidated, validationContext, validationResults, true));
             Assert.Equal(1, validationResults.Count);
             Assert.Equal("The SecondPropertyToBeTested field is required.", validationResults[0].ErrorMessage);
         }
@@ -260,8 +259,7 @@ namespace System.ComponentModel.DataAnnotations.Tests
             var validationContext = new ValidationContext(objectToBeValidated);
 
             var validationResults = new List<ValidationResult>();
-            Assert.False(
-                Validator.TryValidateObject(objectToBeValidated, validationContext, validationResults, true));
+            Assert.False(Validator.TryValidateObject(objectToBeValidated, validationContext, validationResults, true));
             Assert.Equal(1, validationResults.Count);
             Assert.Equal("The field SecondPropertyToBeTested must be a string or array type with a maximum length of '11'.", validationResults[0].ErrorMessage);
         }
@@ -294,8 +292,7 @@ namespace System.ComponentModel.DataAnnotations.Tests
             var validationContext = new ValidationContext(objectToBeValidated);
 
             var validationResults = new List<ValidationResult>();
-            Assert.False(
-                Validator.TryValidateObject(objectToBeValidated, validationContext, validationResults, true));
+            Assert.False(Validator.TryValidateObject(objectToBeValidated, validationContext, validationResults, true));
             Assert.Equal(2, validationResults.Count);
             Assert.Contains(validationResults, x => x.ErrorMessage == "ValidValueStringPropertyAttribute.IsValid failed for value Invalid Value");
             Assert.Contains(validationResults, x => x.ErrorMessage == "The SecondPropertyToBeTested field is required.");
@@ -312,8 +309,7 @@ namespace System.ComponentModel.DataAnnotations.Tests
             var validationContext = new ValidationContext(objectToBeValidated);
 
             var validationResults = new List<ValidationResult>();
-            Assert.False(
-                Validator.TryValidateObject(objectToBeValidated, validationContext, validationResults, true));
+            Assert.False(Validator.TryValidateObject(objectToBeValidated, validationContext, validationResults, true));
             Assert.Equal(2, validationResults.Count);
             Assert.Contains(validationResults, x => x.ErrorMessage == "The SecondPropertyToBeTested field is not a valid phone number.");
             Assert.Contains(validationResults, x => x.ErrorMessage == "The field SecondPropertyToBeTested must be a string or array type with a maximum length of '11'.");
@@ -331,8 +327,7 @@ namespace System.ComponentModel.DataAnnotations.Tests
             var validationContext = new ValidationContext(objectToBeValidated);
 
             var validationResults = new List<ValidationResult>();
-            Assert.False(
-                Validator.TryValidateObject(objectToBeValidated, validationContext, validationResults, true));
+            Assert.False(Validator.TryValidateObject(objectToBeValidated, validationContext, validationResults, true));
             Assert.Equal(2, validationResults.Count);
             Assert.Contains(validationResults, x => x.ErrorMessage == "ValidValueStringPropertyAttribute.IsValid failed for value Invalid Value");
             Assert.Contains(validationResults, x => x.ErrorMessage == "The SecondPropertyToBeTested field is not a valid phone number.");
@@ -753,12 +748,10 @@ namespace System.ComponentModel.DataAnnotations.Tests
         {
             var validationContext = new ValidationContext(new HasMetadataTypeToBeValidated());
             validationContext.MemberName = "SecondPropertyToBeTested";
-            Assert.False(
-                Validator.TryValidateProperty(null, validationContext, null));
+            Assert.False(Validator.TryValidateProperty(null, validationContext, null));
 
             var validationResults = new List<ValidationResult>();
-            Assert.False(
-                Validator.TryValidateProperty(null, validationContext, validationResults));
+            Assert.False(Validator.TryValidateProperty(null, validationContext, validationResults));
             Assert.Equal(1, validationResults.Count);
             Assert.Equal("The SecondPropertyToBeTested field is required.", validationResults[0].ErrorMessage);
         }
@@ -769,12 +762,10 @@ namespace System.ComponentModel.DataAnnotations.Tests
         {
             var validationContext = new ValidationContext(new HasMetadataTypeToBeValidated());
             validationContext.MemberName = "SecondPropertyToBeTested";
-            Assert.False(
-                Validator.TryValidateProperty("Invalid Value", validationContext, null));
+            Assert.False(Validator.TryValidateProperty("Invalid Value", validationContext, null));
 
             var validationResults = new List<ValidationResult>();
-            Assert.False(
-                Validator.TryValidateProperty("Invalid Value", validationContext, validationResults));
+            Assert.False(Validator.TryValidateProperty("Invalid Value", validationContext, validationResults));
             Assert.Equal(1, validationResults.Count);
             Assert.Equal("The field SecondPropertyToBeTested must be a string or array type with a maximum length of '11'.", validationResults[0].ErrorMessage);
         }
@@ -785,12 +776,10 @@ namespace System.ComponentModel.DataAnnotations.Tests
         {
             var validationContext = new ValidationContext(new HasMetadataTypeToBeValidated());
             validationContext.MemberName = "PropertyToBeTested";
-            Assert.False(
-                Validator.TryValidateProperty("Invalid Value", validationContext, null));
+            Assert.False(Validator.TryValidateProperty("Invalid Value", validationContext, null));
 
             var validationResults = new List<ValidationResult>();
-            Assert.False(
-                Validator.TryValidateProperty("Invalid Value", validationContext, validationResults));
+            Assert.False(Validator.TryValidateProperty("Invalid Value", validationContext, validationResults));
             Assert.Equal("ValidValueStringPropertyAttribute.IsValid failed for value Invalid Value", validationResults[0].ErrorMessage);
         }
 
@@ -800,12 +789,10 @@ namespace System.ComponentModel.DataAnnotations.Tests
         {
             var validationContext = new ValidationContext(new HasMetadataTypeWithComplementaryRequirements());
             validationContext.MemberName = "SecondPropertyToBeTested";
-            Assert.False(
-                Validator.TryValidateProperty("Invalid Value", validationContext, null));
+            Assert.False(Validator.TryValidateProperty("Invalid Value", validationContext, null));
 
             var validationResults = new List<ValidationResult>();
-            Assert.False(
-                Validator.TryValidateProperty("Invalid Value", validationContext, validationResults));
+            Assert.False(Validator.TryValidateProperty("Invalid Value", validationContext, validationResults));
             Assert.Equal(2, validationResults.Count);
             Assert.Contains(validationResults, x => x.ErrorMessage == "The SecondPropertyToBeTested field is not a valid phone number.");
             Assert.Contains(validationResults, x => x.ErrorMessage == "The field SecondPropertyToBeTested must be a string or array type with a maximum length of '11'.");
@@ -817,22 +804,18 @@ namespace System.ComponentModel.DataAnnotations.Tests
         {
             var validationContext = new ValidationContext(new SelfMetadataType());
             validationContext.MemberName = "PropertyToBeTested";
-            Assert.False(
-                Validator.TryValidateProperty("Invalid Value", validationContext, null));
+            Assert.False(Validator.TryValidateProperty("Invalid Value", validationContext, null));
 
             var validationResults = new List<ValidationResult>();
-            Assert.False(
-                Validator.TryValidateProperty("Invalid Value", validationContext, validationResults));
+            Assert.False(Validator.TryValidateProperty("Invalid Value", validationContext, validationResults));
             Assert.Equal(1, validationResults.Count);
             Assert.Contains(validationResults, x => x.ErrorMessage == "ValidValueStringPropertyAttribute.IsValid failed for value Invalid Value");
 
             validationContext.MemberName = "SecondPropertyToBeTested";
-            Assert.False(
-                Validator.TryValidateProperty("Invalid Value", validationContext, null));
+            Assert.False(Validator.TryValidateProperty("Invalid Value", validationContext, null));
 
             validationResults.Clear();
-            Assert.False(
-                Validator.TryValidateProperty("Invalid Value", validationContext, validationResults));
+            Assert.False(Validator.TryValidateProperty("Invalid Value", validationContext, validationResults));
             Assert.Equal(1, validationResults.Count);
             Assert.Contains(validationResults, x => x.ErrorMessage == "The SecondPropertyToBeTested field is not a valid phone number.");
         }
