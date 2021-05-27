@@ -239,7 +239,7 @@ namespace System.ComponentModel.DataAnnotations
             private Dictionary<string, PropertyStoreItem> CombineMetadataTypeAttributes(Dictionary<string, PropertyStoreItem> propertyStoreItems)
             {
                 // check if metadata attribute is present on the type
-                MetadataTypeAttribute attribute = (MetadataTypeAttribute)Attribute.GetCustomAttributes(_type, typeof(MetadataTypeAttribute)).First();
+                MetadataTypeAttribute? attribute = (MetadataTypeAttribute)Attribute.GetCustomAttributes(_type, typeof(MetadataTypeAttribute)).First();
                 if (attribute != null)
                 {
                     // get properties of metadata type
