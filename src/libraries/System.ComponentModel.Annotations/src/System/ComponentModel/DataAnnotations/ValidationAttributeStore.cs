@@ -235,16 +235,15 @@ namespace System.ComponentModel.DataAnnotations
                 return CombineMetadataTypeAttributes(propertyStoreItems);
             }
 
-            [UnconditionalSuppressMessage("ReflectionAnalysis", "IL2075:DynamicallyAccessedMembersAttribute",
-                       Justification = "The ctor is marked with DynamicallyAccessedMembers.")]
+            [return: DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
             private Dictionary<string, PropertyStoreItem> CombineMetadataTypeAttributes(Dictionary<string, PropertyStoreItem> propertyStoreItems)
             {
                 // check if metadata attribute is present on the type
-                var metadataAttr = _type.CustomAttributes.FirstOrDefault(attr => attr.AttributeType.Name == nameof(MetadataTypeAttribute));
-                if (metadataAttr != null)
+                MetadataTypeAttribute attribute = (MetadataTypeAttribute)Attribute.GetCustomAttributes(_type, typeof(MetadataTypeAttribute)).First();
+                if (attribute != null)
                 {
                     // get properties of metadata type
-                    TypeInfo t = (TypeInfo)metadataAttr.ConstructorArguments.First().Value!;
+                    TypeInfo t = (TypeInfo)attribute.MetadataClassType;
                     var properties = t.GetProperties()
                         .Where(prop => !prop.GetIndexParameters().Any());
 
@@ -259,7 +258,7 @@ namespace System.ComponentModel.DataAnnotations
                                 property.Name));
                         }
 
-                        var mergedAttributes = MergeAttributes(baseProperty!.ValidationAttributes.Cast<Attribute>(),
+                        var mergedAttributes = MergeAttributes(baseProperty.ValidationAttributes.Cast<Attribute>(),
                             CustomAttributeExtensions.GetCustomAttributes(property, true));
                         var item = new PropertyStoreItem(property.PropertyType, mergedAttributes);
                         propertyStoreItems[property.Name] = item;
