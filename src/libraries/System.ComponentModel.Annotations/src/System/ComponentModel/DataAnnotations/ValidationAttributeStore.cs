@@ -235,7 +235,6 @@ namespace System.ComponentModel.DataAnnotations
                 return CombineMetadataTypeAttributes(propertyStoreItems);
             }
 
-            [return: DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
             private Dictionary<string, PropertyStoreItem> CombineMetadataTypeAttributes(Dictionary<string, PropertyStoreItem> propertyStoreItems)
             {
                 // check if metadata attribute is present on the type
@@ -243,25 +242,25 @@ namespace System.ComponentModel.DataAnnotations
                 if (attribute != null)
                 {
                     // get properties of metadata type
-                    TypeInfo t = (TypeInfo)attribute.MetadataClassType;
-                    var properties = t.GetProperties()
-                        .Where(prop => !prop.GetIndexParameters().Any());
-
-                    foreach (PropertyInfo property in properties)
+                    Type t = attribute.MetadataClassType;
+                    foreach (PropertyInfo property in t.GetProperties())
                     {
-                        // metadata property name must match an existing property
-                        if (!propertyStoreItems.TryGetValue(property.Name, out PropertyStoreItem? baseProperty))
+                        if (property.GetIndexParameters().Length == 0)
                         {
-                            // re-used existing description since it is the same exception
-                            throw new InvalidOperationException(SR.Format(SR.AssociatedMetadataTypeTypeDescriptor_MetadataTypeContainsUnknownProperties,
-                                _type.FullName,
-                                property.Name));
-                        }
+                            // metadata property name must match an existing property
+                            if (!propertyStoreItems.TryGetValue(property.Name, out PropertyStoreItem? baseProperty))
+                            {
+                                // re-used existing description since it is the same exception
+                                throw new InvalidOperationException(SR.Format(SR.AssociatedMetadataTypeTypeDescriptor_MetadataTypeContainsUnknownProperties,
+                                    _type.FullName,
+                                    property.Name));
+                            }
 
-                        var mergedAttributes = MergeAttributes(baseProperty.ValidationAttributes.Cast<Attribute>(),
-                            CustomAttributeExtensions.GetCustomAttributes(property, true));
-                        var item = new PropertyStoreItem(property.PropertyType, mergedAttributes);
-                        propertyStoreItems[property.Name] = item;
+                            var mergedAttributes = MergeAttributes(baseProperty.ValidationAttributes.Cast<Attribute>(),
+                                CustomAttributeExtensions.GetCustomAttributes(property, true));
+                            var item = new PropertyStoreItem(property.PropertyType, mergedAttributes);
+                            propertyStoreItems[property.Name] = item;
+                        }
                     }
                 }
 
