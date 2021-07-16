@@ -217,7 +217,6 @@ namespace System.ComponentModel.DataAnnotations
 
             private Dictionary<string, PropertyStoreItem> CreatePropertyStoreItems()
             {
-
                 var propertyStoreItems = new Dictionary<string, PropertyStoreItem>();
 
                 // exclude index properties to match old TypeDescriptor functionality
@@ -250,7 +249,6 @@ namespace System.ComponentModel.DataAnnotations
                             // metadata property name must match an existing property
                             if (!propertyStoreItems.TryGetValue(property.Name, out PropertyStoreItem? baseProperty))
                             {
-                                // re-used existing description since it is the same exception
                                 throw new InvalidOperationException(SR.Format(SR.AssociatedMetadataTypeTypeDescriptor_MetadataTypeContainsUnknownProperties,
                                     _type.FullName,
                                     property.Name));
