@@ -215,7 +215,7 @@ namespace System.ComponentModel.DataAnnotations
                 return _propertyStoreItems.TryGetValue(propertyName, out item);
             }
 
-            private Dictionary<string, PropertyStoreItem> CreatePropertyStoreItems() 
+            private Dictionary<string, PropertyStoreItem> CreatePropertyStoreItems()
             {
                 Dictionary<string, PropertyStoreItem> propertyStoreItems = new Dictionary<string, PropertyStoreItem>();
                 PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(this._type);
@@ -236,15 +236,19 @@ namespace System.ComponentModel.DataAnnotations
             /// </remarks>
             /// <param name="propertyDescriptor">The property descriptor whose attributes are needed.</param>
             /// <returns>A new <see cref="AttributeCollection"/> stripped of any attributes from the property's type.</returns>
-            public static AttributeCollection GetExplicitAttributes(PropertyDescriptor propertyDescriptor) {
+            public static AttributeCollection GetExplicitAttributes(PropertyDescriptor propertyDescriptor)
+            {
                 List<Attribute> attributes = new List<Attribute>(propertyDescriptor.Attributes.Cast<Attribute>());
                 IEnumerable<Attribute> typeAttributes = TypeDescriptor.GetAttributes(propertyDescriptor.PropertyType).Cast<Attribute>();
                 bool removedAttribute = false;
-                foreach (Attribute attr in typeAttributes) {
-                    for (int i = attributes.Count - 1; i >= 0; --i) {
+                foreach (Attribute attr in typeAttributes)
+                {
+                    for (int i = attributes.Count - 1; i >= 0; --i)
+                    {
                         // We must use ReferenceEquals since attributes could Match if they are the same.
                         // Only ReferenceEquals will catch actual duplications.
-                        if (object.ReferenceEquals(attr, attributes[i])) {
+                        if (object.ReferenceEquals(attr, attributes[i]))
+                        {
                             attributes.RemoveAt(i);
                             removedAttribute = true;
                         }
