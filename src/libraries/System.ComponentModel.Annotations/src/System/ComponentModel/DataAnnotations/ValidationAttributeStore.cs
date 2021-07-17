@@ -219,7 +219,8 @@ namespace System.ComponentModel.DataAnnotations
             {
                 Dictionary<string, PropertyStoreItem> propertyStoreItems = new Dictionary<string, PropertyStoreItem>();
                 PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(this._type);
-                foreach (PropertyDescriptor property in properties) {
+                foreach (PropertyDescriptor property in properties)
+                {
                     PropertyStoreItem item = new PropertyStoreItem(property.PropertyType, GetExplicitAttributes(property).Cast<Attribute>());
                     propertyStoreItems[property.Name] = item;
                 }
