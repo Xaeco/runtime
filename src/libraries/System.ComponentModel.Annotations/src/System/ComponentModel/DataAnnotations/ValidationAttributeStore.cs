@@ -224,7 +224,7 @@ namespace System.ComponentModel.DataAnnotations
                     PropertyStoreItem item = new PropertyStoreItem(property.PropertyType, GetExplicitAttributes(property).Cast<Attribute>());
                     propertyStoreItems[property.Name] = item;
                 }
- 
+
                 return propertyStoreItems;
             }
 
